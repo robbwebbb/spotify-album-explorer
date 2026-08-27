@@ -78,6 +78,26 @@ spotify artist 4Z8W4fKeB5YxbusRsdQVPb
 spotify artist 4Z8W4fKeB5YxbusRsdQVPb --limit 20
 ```
 
+## Installation
+
+```bash
+git clone https://github.com/robbwebbb/spotify-album-explorer
+cd spotify-album-explorer
+bun install
+cp .env.example .env
+# Edit .env with Spotify credentials
+
+# Run directly (wrapper auto-finds bun)
+./spotify search "album:OK Computer artist:Radiohead"
+
+# Or add to PATH
+export PATH="$PWD:$PATH"
+spotify search "album:OK Computer artist:Radiohead"
+
+# Override bun location if needed
+SPOTIFY_BUN_CMD=/custom/path/bun ./spotify search "artist:Beatles"
+```
+
 ## Search Field Filters
 
 | Filter | Use With | Example |
