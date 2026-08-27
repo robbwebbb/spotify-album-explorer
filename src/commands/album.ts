@@ -20,6 +20,7 @@ export const albumCommand = new Command("album")
         ["Total Tracks", String(album.total_tracks)],
         ["Copyrights", album.copyrights.map(c => `${c.type}: ${c.text}`).join("; ") || "—"],
         ["UPC/EAN", album.external_ids.upc || album.external_ids.ean || "—"],
+        ["Spotify URL", album.external_urls?.spotify || "—"],
       ], album.name));
 
       const tracksResult = await getAlbumTracks(id);
@@ -27,13 +28,14 @@ export const albumCommand = new Command("album")
 
       if (allTracks.length > 0) {
         console.log("\n" + renderTable(
-          ["#", "Title", "Duration", "Exp", "ISRC"],
+          ["#", "Title", "Duration", "Exp", "ISRC", "Spotify URL"],
           allTracks.map((track: SimplifiedTrackObject, i: number) => [
             String(track.track_number),
             truncate(track.name, 45),
             formatDuration(track.duration_ms),
             formatExplicit(track.explicit),
             track.external_ids?.isrc || "—",
+            track.external_urls?.spotify || "—",
           ]),
           { title: `Tracks (${allTracks.length})` }
         ));

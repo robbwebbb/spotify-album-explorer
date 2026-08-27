@@ -18,6 +18,7 @@ export const artistCommand = new Command("artist")
 
       console.log(renderKeyValueTable([
         ["Name", artist.name],
+        ["Spotify URL", artist.external_urls?.spotify || "—"],
       ], artist.name));
 
       if (albums.length === 0) {
@@ -37,7 +38,7 @@ export const artistCommand = new Command("artist")
       }
 
       console.log("\n" + renderTable(
-        ["#", "Album", "Type", "Released", "Tracks", "UPC/EAN", "ID"],
+        ["#", "Album", "Type", "Released", "Tracks", "UPC/EAN", "Spotify URL"],
         albums.map((album: SimplifiedAlbumObject, i: number) => {
           const full = albumDetails[i];
           const upc = full.external_ids?.upc || full.external_ids?.ean || "—";
@@ -48,7 +49,7 @@ export const artistCommand = new Command("artist")
             formatDate(album.release_date, album.release_date_precision),
             String(album.total_tracks),
             truncate(upc, 14),
-            album.id,
+            album.external_urls?.spotify || "—",
           ];
         }),
         { title: `Albums (${albumsResult.total} total, showing ${albums.length})` }

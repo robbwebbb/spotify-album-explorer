@@ -27,11 +27,11 @@ export const searchCommand = new Command("search")
             truncate(album.artists.map(a => a.name).join(", "), 35),
             formatDate(album.release_date, album.release_date_precision),
             album.album_type,
-            album.id,
+            album.external_urls?.spotify || "—",
           ]);
 
           console.log(renderTable(
-            ["#", "Album", "Artist(s)", "Released", "Type", "ID"],
+            ["#", "Album", "Artist(s)", "Released", "Type", "Spotify URL"],
             rows,
             { title: `Albums: Found ${result.total}` }
           ));
@@ -51,11 +51,11 @@ export const searchCommand = new Command("search")
             truncate(track.album.name, 30),
             formatDuration(track.duration_ms),
             track.explicit ? "🅴" : "",
-            track.id,
+            track.external_urls?.spotify || "—",
           ]);
 
           console.log(renderTable(
-            ["#", "Track", "Artist(s)", "Album", "Duration", "Exp", "ID"],
+            ["#", "Track", "Artist(s)", "Album", "Duration", "Exp", "Spotify URL"],
             rows,
             { title: `Tracks: Found ${result.total}` }
           ));
@@ -72,12 +72,11 @@ export const searchCommand = new Command("search")
             String(i + 1),
             truncate(artist.name, 45),
             artist.images?.length ? "✓" : "—",
-            artist.id,
             artist.external_urls?.spotify || "—",
           ]);
 
           console.log(renderTable(
-            ["#", "Artist", "Img", "ID", "Spotify URL"],
+            ["#", "Artist", "Img", "Spotify URL"],
             rows,
             { title: `Artists: Found ${result.total}` }
           ));

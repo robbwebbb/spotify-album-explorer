@@ -21,6 +21,7 @@ export const trackCommand = new Command("track")
         ["Disc #", String(track.disc_number)],
         ["Explicit", track.explicit ? "Yes" : "No"],
         ["ISRC", track.external_ids.isrc || "—"],
+        ["Spotify URL", track.external_urls?.spotify || "—"],
       ], track.name));
 
       try {
