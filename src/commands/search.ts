@@ -1,14 +1,14 @@
 import { Command } from "commander";
 import chalk from "chalk";
-import { searchAlbums, searchTracks } from "../api/endpoints.js";
+import { searchAlbums, searchTracks, searchArtists } from "../api/endpoints.js";
 import { renderTable, renderKeyValueTable } from "../utils/table.js";
 import { formatDate, formatDuration, truncate } from "../utils/format.js";
-import type { SimplifiedAlbumObject, TrackObject } from "../models/types.js";
+import type { SimplifiedAlbumObject, TrackObject, ArtistObject } from "../models/types.js";
 
 export const searchCommand = new Command("search")
-  .description("Search for albums or tracks")
+  .description("Search for albums, tracks, or artists")
   .argument("<query>", "Search query (e.g., 'album:OK Computer artist:Radiohead')")
-  .option("-t, --type <type>", "Search type: album, track, or both", "album")
+  .option("-t, --type <type>", "Search type: album, track, artist, or both", "album")
   .option("-l, --limit <number>", "Number of results (max 10)", "10")
   .action(async (query: string, options) => {
     try {
@@ -58,6 +58,28 @@ export const searchCommand = new Command("search")
             ["#", "Track", "Artist(s)", "Album", "Duration", "Exp", "ID"],
             rows,
             { title: `Tracks: Found ${result.total}` }
+          ));
+        }
+      }
+      
+      if (type === "artist" || type === "both") {
+        const result = await searchArtists(query, { limit });
+        
+        if (result.items.length === 0) {
+          console.log(chalk.yellow("No artists found."));
+        } else {
+          const rows = result.items.map((artist: ArtistObject, i: number) => [
+            String(i + 1),
+            truncate(artist.name, 45),
+            artist.genres?.length ? truncate(artist.genres.join(", "), 40) : "—",
+            artist.followers?.total?.toLocaleString() ?? "—",
+            artist.id,
+          ]);
+
+          console.log(renderTable(
+            ["#", "Artist", "Genres", "Followers", "ID"],
+            rows,
+            { title: `Artists: Found ${result.total}` }
           ));
         }
       }

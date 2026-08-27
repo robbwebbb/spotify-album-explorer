@@ -47,6 +47,23 @@ export async function searchTracks(
   return data.tracks ?? { href: "", limit: 0, next: null, offset: 0, previous: null, total: 0, items: [] };
 }
 
+export async function searchArtists(
+  query: string,
+  options?: { limit?: number; offset?: number }
+): Promise<PagingObject<ArtistObject>> {
+  const limit = Math.min(Math.max(options?.limit ?? 10, 1), 10);
+  const params = new URLSearchParams({
+    q: query,
+    type: "artist",
+    market: MARKET,
+    limit: String(limit),
+    offset: String(options?.offset ?? 0),
+  });
+  
+  const data = await spotifyFetch<SearchResponse>(`/search?${params}`);
+  return data.artists ?? { href: "", limit: 0, next: null, offset: 0, previous: null, total: 0, items: [] };
+}
+
 export async function getAlbum(id: string): Promise<AlbumObject> {
   return spotifyFetch<AlbumObject>(`/albums/${id}?market=${MARKET}`);
 }
