@@ -71,13 +71,13 @@ export const searchCommand = new Command("search")
           const rows = result.items.map((artist: ArtistObject, i: number) => [
             String(i + 1),
             truncate(artist.name, 45),
-            artist.genres?.length ? truncate(artist.genres.join(", "), 40) : "—",
-            artist.followers?.total?.toLocaleString() ?? "—",
+            artist.images?.length ? "✓" : "—",
             artist.id,
+            artist.external_urls?.spotify || "—",
           ]);
 
           console.log(renderTable(
-            ["#", "Artist", "Genres", "Followers", "ID"],
+            ["#", "Artist", "Img", "ID", "Spotify URL"],
             rows,
             { title: `Artists: Found ${result.total}` }
           ));
