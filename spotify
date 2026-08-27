@@ -1,0 +1,2 @@
+#!/usr/bin/env bash
+exec /Users/rob/.bun/bin/bun /Users/rob/Web/spotify-webb-api/dist/index.js "$@"
