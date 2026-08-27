@@ -1,2 +1,26 @@
 #!/usr/bin/env bash
-exec /Users/rob/.bun/bin/bun /Users/rob/Web/spotify-webb-api/dist/index.js "$@"
+# Generic wrapper that finds dist/index.js relative to this script's location
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+# Find bun executable
+BUN_CMD="${SPOTIFY_BUN_CMD:-bun}"
+if ! command -v "$BUN_CMD" &> /dev/null; then
+  # Check common install locations
+  for path in \
+    "$HOME/.bun/bin/bun" \
+    "/usr/local/bin/bun" \
+    "/opt/homebrew/bin/bun" \
+    "/usr/bin/bun"; do
+    if [[ -x "$path" ]]; then
+      BUN_CMD="$path"
+      break
+    fi
+  done
+fi
+
+if ! command -v "$BUN_CMD" &> /dev/null; then
+  echo "Error: bun not found. Install bun (https://bun.sh) or set SPOTIFY_BUN_CMD environment variable." >&2
+  exit 1
+fi
+
+exec "$BUN_CMD" "$SCRIPT_DIR/dist/index.js" "$@"
